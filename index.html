@@ -6,6 +6,7 @@
         <script src="/plugins/gLightbox_3.2.0/js/glightbox.min.js"></script>
 
 
+
     </head>
 <body>
 
@@ -14,10 +15,14 @@
 
     <script>
 
-
+    document.addEventListener("DOMContentLoaded", function(event) {
+        
         getImgs();
 
-        async function getImgs(){
+        //código a ejecutar cuando existe la certeza de que el DOM está listo para recibir acciones
+    });
+
+    async function getImgs(){
             let imgs = await fetch("images.json").then((response) => response.json());
 
             const gallery = document.querySelector(".gallery");
@@ -44,7 +49,52 @@
             initMansonry();
             
         }
-        
+
+
+    </script>
+
+    <script>
+
+        // Función para cargar la API de Google Drive
+        function loadDriveApi() {
+            console.log("init");
+
+            // Inicializar la API client con tus credenciales y scopes necesarios
+            gapi.client.init({
+                apiKey: 'AIzaSyCApwQ2HZOFrm_wfLTc-cTKboWlt7q-3iE',
+                clientId: '527521356951-t5ltk1n08os4r6jj92nbkel29c202pgs.apps.googleusercontent.com',
+                discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
+                scope: 'https://www.googleapis.com/auth/drive.readonly'
+            }).then(function() {
+                console.log('API de Google Drive inicializada correctamente');
+            }).catch(function(error) {
+                console.error('Error al inicializar API de Google Drive:', error);
+            });
+
+            gapi.client.load('drive', 'v3', listFiles);
+        }
+
+        // Función para listar los archivos en una carpeta específica
+        function listFiles() {
+            // ID de la carpeta de Google Drive
+            var folderId = '1j9mtn98SkUMciS9rAFKv4aFFhBhKUtA1';
+
+            // Solicitar lista de archivos
+            gapi.client.drive.files.list({
+                'q': "'" + folderId + "' in parents and trashed=false",
+                'fields': 'files(name)'
+            }).then(function(response) {
+                var files = response.result.files;
+                if (files && files.length > 0) {
+                    // Iterar sobre los archivos y mostrar sus nombres
+                    for (var i = 0; i < files.length; i++) {
+                        console.log(files[i].name);
+                    }
+                } else {
+                    console.log('No se encontraron archivos en la carpeta.');
+                }
+            });
+        }
 
     </script>
 
