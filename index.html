@@ -23,22 +23,28 @@
     });
 
     async function getImgs(){
-            let imgs = await fetch("images.json").then((response) => response.json());
+            let imgs = await fetch("imagesId.json").then((response) => response.json());
+
+            // Barajar imagenes (Cambiar el orden)
+            imgs = imgs
+                .map(value => ({ value, sort: Math.random() }))
+                .sort((a, b) => a.sort - b.sort)
+                .map(({ value }) => value)
 
             const gallery = document.querySelector(".gallery");
 
             console.log("IMGS", imgs);
 
-            for (const url of imgs){
+            for (const id of imgs){
                 let a = document.createElement('a');
                 a.className="gallery-item";
-                a.href=url;
+                a.href="https://lh3.googleusercontent.com/d/"+id+"=s4000";
 
                 let div = document.createElement("div");
                 div.className="content"
 
                 let img = document.createElement("img")
-                img.src=url;
+                img.src="https://lh3.googleusercontent.com/d/"+id+"=w350";
 
                 div.appendChild(img);
                 a.appendChild(div);
@@ -50,6 +56,8 @@
             
         }
 
+        //https://lh3.googleusercontent.com/d/19tMIS9GsvsLS3bb_D__1sWXkZO68274R=s4000
+        //https://lh3.googleusercontent.com/d/19tMIS9GsvsLS3bb_D__1sWXkZO68274R=s4000
 
     </script>
 
