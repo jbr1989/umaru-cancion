@@ -1,0 +1,37 @@
+
+* {
+    margin: 0;
+  }
+  
+  .grid--masonry {
+    display: grid;
+    justify-content: center;
+    grid-gap: 0.75rem;
+    grid-template-columns: repeat(auto-fit, min(15em, 100%));
+    padding: 0.75rem;
+    min-height: 100vh;
+    background: #555;
+  }
+  .grid--masonry > * {
+    align-self: start;
+  }
+  .grid--masonry > *:first-child {
+    grid-column: 1/-1;
+  }
+  .grid--masonry > *:first-child img {
+    max-height: 31vh;
+  }
+  .grid--masonry > * img {
+    display: block;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+    filter: sepia(1);
+  }
+  @supports (grid-template-rows: masonry) {
+    .grid--masonry {
+      grid-template-rows: masonry;
+    }
+  }
+  
