@@ -2,15 +2,17 @@
     <head>
         <link rel="stylesheet" href="index.css"/>
 
-        <link rel="stylesheet" href="/plugins/gLightbox_3.2.0/css/glightbox.min.css" />
-        <script src="/plugins/gLightbox_3.2.0/js/glightbox.min.js"></script>
+        <link rel="stylesheet" href="plugins/gLightbox_3.2.0/css/glightbox.min.css" />
+        <script src="plugins/gLightbox_3.2.0/js/glightbox.min.js"></script>
 
 
 
     </head>
 <body>
 
-    <section id='grid--masonry' class="gallery"></section>
+    <section id='grid--masonry' class="gallery">
+        <!-- <a class="gallery-item" href="img/Umaru meme.jpg"><div class="content"><img src="img/Umaru meme.jpg"></div></a> -->
+    </section>
 
 
     <script>
@@ -38,6 +40,7 @@
             for (const id of imgs){
                 let a = document.createElement('a');
                 a.className="gallery-item";
+                a.setAttribute("data-type","image");
                 a.href="https://lh3.googleusercontent.com/d/"+id+"=s4000";
 
                 let div = document.createElement("div");
