@@ -40,8 +40,8 @@
 
     </dialog>
 
-    <section id="audio" class="gap-example">
-        <audio controls autoplay>
+    <section id="audioSection" class="gap-example">
+        <audio id="audio" controls>
             <source src="audio/cancion.mp3" type="audio/mp3">
         </audio>
     </section>
@@ -82,6 +82,8 @@
         dialog.style.opacity = 0;
         dialog.style.display = "none";
         dialog.close();
+
+        document.getElementById("audio").play();
     }
 
     document.addEventListener("DOMContentLoaded", function(event) {
