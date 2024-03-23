@@ -1,61 +1,137 @@
 <html lang="es">
     <head>
+        <meta charset="UTF-8" />
+        <title>UmaruRegalo</title>
+
         <link rel="stylesheet" href="index.css"/>
 
         <link rel="stylesheet" href="plugins/gLightbox_3.2.0/css/glightbox.min.css" />
         <script src="plugins/gLightbox_3.2.0/js/glightbox.min.js"></script>
 
-
-
     </head>
 <body>
 
-    <section id="audio">
+    <dialog id="initDialog">
+
+        <div>
+            <h1>Bienvenid@ al regalo de Umaruchan</h1>
+
+            <h2>Este regalo ha sido posible gracias a:</h2>
+            
+            <ul style="list-style: none;margin:0;">
+                <li>Dizo</li>
+                <li>DianaR</li>
+                <li>Krispymaru</li>
+                <li>LokisEngel</li>
+                <li>Mangaconj</li>
+                <li>Naunoke</li>
+                <li>Nenachan</li>
+                <li>SilviaGarAz</li>
+            </ul>
+
+            <h2>Para este regalo es necesario tener pañuelos y unos auriculares</h2>
+
+            <p> Al dar click en el siguiente botón empezara a sonar una canción y podrás disfrutar de la página mientras la escuchas</p>
+
+            <button onclick="closeDialog()">Empezar</button>
+
+            <p style="font-size:.8em; color:grey;">Página web creada y diseñada por @Dizo</p>
+        </div>
+
+    </dialog>
+
+    <section id="audio" class="gap-example">
         <audio controls autoplay>
             <source src="audio/cancion.mp3" type="audio/mp3">
         </audio>
     </section>
 
     <section id='grid--masonry' class="gallery">
-        <!-- <a class="gallery-item" href="img/Umaru meme.jpg"><div class="content"><img src="img/Umaru meme.jpg"></div></a> -->
+        <!-- <a class="gallery-item" data-type="video" href="video/Umaru_tutorial.mp4">
+            <div class="content">
+                <video>
+                    <source src="video/Umaru_tutorial.mp4" type="video/mp4">
+                </video>
+            </div>
+        </a>
+        <a class="gallery-item" data-type="video" href="video/Umaru_tutorial.mp4">
+            <div class="content">
+                <video id="video-google-drive" poster="https://drive.google.com/thumbnail?id=1rmLngG_r5TOIO6X8WjR8fyZuOiAe1d_f">
+                    <source src="https://drive.google.com/uc?id=1rmLngG_r5TOIO6X8WjR8fyZuOiAe1d_f" type="video/mp4">    
+                </video>
+            </div>
+        </a> -->
+        
+        <!-- <a class="gallery-item" href="https://drive.google.com/file/d/1rmLngG_r5TOIO6X8WjR8fyZuOiAe1d_f/preview">
+            <div class="content">
+                <img src="https://lh3.googleusercontent.com/d/1rmLngG_r5TOIO6X8WjR8fyZuOiAe1d_f=w350">
+            </div>
+        </a> -->
+
     </section>
+
+    
 
 
     <script>
+        
+    initDialog.showModal();
+
+    function closeDialog(){
+        let dialog = document.getElementById('initDialog');
+        dialog.style.opacity = 0;
+        dialog.style.display = "none";
+        dialog.close();
+    }
 
     document.addEventListener("DOMContentLoaded", function(event) {
-        
+   
         getImgs();
 
         //código a ejecutar cuando existe la certeza de que el DOM está listo para recibir acciones
     });
 
     async function getImgs(){
-            let imgs = await fetch("imagesId.json").then((response) => response.json());
+            let files = await fetch("filesInfo.json").then((response) => response.json());
 
             // Barajar imagenes (Cambiar el orden)
-            imgs = imgs
+            files = files
                 .map(value => ({ value, sort: Math.random() }))
                 .sort((a, b) => a.sort - b.sort)
                 .map(({ value }) => value)
 
             const gallery = document.querySelector(".gallery");
 
-            console.log("IMGS", imgs);
+            console.log("FILES", files);
 
-            for (const id of imgs){
+            for (const file of files){
+
+                let type= (file.type.toString().startsWith("image") ? "image" : "video");
+
+
                 let a = document.createElement('a');
                 a.className="gallery-item";
-                a.setAttribute("data-type","image");
-                a.href="https://lh3.googleusercontent.com/d/"+id+"=s4000";
-
+                a.setAttribute("data-type", type);
+                
                 let div = document.createElement("div");
                 div.className="content"
 
                 let img = document.createElement("img")
-                img.src="https://lh3.googleusercontent.com/d/"+id+"=w350";
+                    img.src="https://lh3.googleusercontent.com/d/"+file.id+"=w350";
+                    div.appendChild(img);
+                
 
-                div.appendChild(img);
+                if (type=="image"){
+                    a.href="https://lh3.googleusercontent.com/d/"+file.id+"=s4000";
+
+                }else{
+                    a.setAttribute("data-type", "");
+                    //https://drive.google.com/file/d/1rmLngG_r5TOIO6X8WjR8fyZuOiAe1d_f/preview
+                    a.href = "https://drive.google.com/file/d/"+file.id+"/preview"
+                    //a.href = "https://drive.google.com/uc?id="+file.id
+
+                }
+            
                 a.appendChild(div);
                 gallery.appendChild(a);
             }
@@ -119,7 +195,7 @@
 
         var gallery = document.querySelector('#grid--masonry');
         var getVal = function (elem, style) { return parseInt(window.getComputedStyle(elem).getPropertyValue(style)); };
-        var getHeight = function (item) { return item.querySelector('img').getBoundingClientRect().height; };
+        var getHeight = function (item) { return item.querySelector('img, video, iframe').getBoundingClientRect().height; };
         var resizeAll = function () {
 
             var altura = getVal(gallery, 'grid-auto-rows');
@@ -134,9 +210,11 @@
         function initMansonry(){
 
 
-            gallery.querySelectorAll('img').forEach(function (item) {
+            gallery.querySelectorAll('img, video').forEach(function (item) {
+
                 item.classList.add('byebye');
-                if (item.complete) {
+                console.log("ITEM", item);
+                if (item.complete || item.paused) {
                     console.log(item.src);
                 }
                 else {
@@ -156,6 +234,7 @@
             var lightbox = GLightbox({
                 selector: '.gallery-item'
             });
+
         }
 
         
