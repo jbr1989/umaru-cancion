@@ -83,7 +83,9 @@
         dialog.style.display = "none";
         dialog.close();
 
-        document.getElementById("audio").play();
+        let audio = document.getElementById("audio");
+        audio.volume = 0.5;
+        audio.play();
     }
 
     document.addEventListener("DOMContentLoaded", function(event) {
